@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -78,27 +79,27 @@ const ThreeSixtyViewer = () => {
       // Réinitialiser l'orientation de la caméra
       controls.target.set(0, 0, 0);
       camera.lookAt(0, 0, -1);
-    
+
       // Obtenir la position du clic de la souris par rapport au canvas
       const rect = renderer.domElement.getBoundingClientRect();
       const mouse = new THREE.Vector2(
         ((event.clientX - rect.left) / rect.width) * 2 - 1,
         -((event.clientY - rect.top) / rect.height) * 2 + 1
       );
-    
+
       // Utiliser le Raycaster pour détecter les intersections avec les POIs
       const raycaster = new THREE.Raycaster();
       raycaster.setFromCamera(mouse, camera);
-    
+
       // Trouver les objets intersectés
       const intersects = raycaster.intersectObjects(poiObjects);
-    
+
       // Si des intersections sont trouvées, animer la caméra vers le premier POI
       if (intersects.length > 0) {
         const targetPoi = intersects[0].object;
         const targetPosition = targetPoi.position.clone();
         targetPoi.visible = false; // Rendre le POI invisible
-    
+
         gsap.to(camera.position, {
           duration: 2,
           x: targetPosition.x,
@@ -145,8 +146,8 @@ const ThreeSixtyViewer = () => {
       camera.lookAt(controls.target);
       controls.update();
     };
-   
-  
+
+
     const onKeyDown = (event) => {
       switch (event.key) {
         case 'ArrowUp':
@@ -197,13 +198,15 @@ const ThreeSixtyViewer = () => {
     // Nettoyer lors du démontage du composant
     return () => {
       window.removeEventListener('resize', onWindowResize);
-      mountRef.current.removeEventListener('click', onPoiClick);
-      window.removeEventListener('keydown', onKeyDown);
-      mountRef.current.removeEventListener('mouseenter', onMouseEnter);
-      mountRef.current.removeEventListener('mouseleave', onMouseLeave);
-      mountRef.current.removeChild(renderer.domElement);
+      if (mountRef.current) {
+        mountRef.current.removeEventListener('click', onPoiClick);
+        mountRef.current.removeEventListener('mouseenter', onMouseEnter);
+        mountRef.current.removeEventListener('mouseleave', onMouseLeave);
+        mountRef.current.removeChild(renderer.domElement);
+      }
     };
   }, []);
+
 
   // Fonction pour basculer en mode plein écran
   const toggleFullScreen = () => {
@@ -286,7 +289,6 @@ const ThreeSixtyViewer = () => {
 };
 
 export default ThreeSixtyViewer;
-
 // import React, { useEffect, useRef } from 'react';
 // import * as THREE from 'three';
 // import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';

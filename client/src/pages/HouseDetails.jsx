@@ -69,11 +69,11 @@ const HouseDetails = () => {
           <h2 style={{ fontSize: "24px", fontWeight: "bold", color: "#000", marginBottom: "10px" }}>Description</h2>
           <p style={{ fontSize: "18px", color: "#000" }}>{house.description}</p>
           <div style={{ marginTop: "20px" }}>
-            <Link to="/visit" style={{ textDecoration: "none" }}>
-              <button style={{ backgroundColor: "#F27438", color: "#FFF", padding: "10px 20px", marginRight: "10px", border: "none", borderRadius: "10px", cursor: "pointer" }}>
-                Visite 3D
-              </button>
-            </Link>
+          <Link to={`/houses/${id}/visitt`} style={{ textDecoration: "none" }}>
+  <button style={{ backgroundColor: "#F27438", color: "#FFF", padding: "10px 20px", marginRight: "10px", border: "none", borderRadius: "10px", cursor: "pointer" }}>
+    Visite 3D
+  </button>
+</Link>
             <Link to="/visit" style={{ textDecoration: "none" }}>
               <button style={{ backgroundColor: "#F27438", color: "#FFF", padding: "10px 20px", border: "none", borderRadius: "10px", cursor: "pointer" }}>
                 Visiter ce bien en personne

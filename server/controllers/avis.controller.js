@@ -68,7 +68,6 @@ module.exports.getAllAvis = async (req, res) => {
 };
 
 
-
 module.exports.getAvisById = async (req, res) => {
   try {
     const avis = await Avis.findById(req.params.id);

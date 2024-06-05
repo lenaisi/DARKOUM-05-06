@@ -9,13 +9,13 @@ import SimpleSection from "../components/SimpleSection";
 
 const Home = () => {
   const [avis, setAvis] = useState([]);
+  const [newComment, setNewComment] = useState("");
+  const [newRating, setNewRating] = useState(0);
 
   useEffect(() => {
     const fetchAvis = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5000/api/v4/avis/avis"
-        );
+        const response = await axios.get("http://localhost:5000/api/v4/avis/avis");
         setAvis(response.data.data.avis);
       } catch (error) {
         console.error("Erreur lors de la récupération des avis:", error);
@@ -35,6 +35,22 @@ const Home = () => {
       }
     }
     return stars;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("http://localhost:5000/api/v4/avis/avis", {
+        contenu: newComment,
+        note: newRating,
+        utilisateur: { nomComplet: "Utilisateur Anonyme" } // Update this as needed
+      });
+      setAvis([...avis, response.data.data.avis]);
+      setNewComment("");
+      setNewRating(0);
+    } catch (error) {
+      console.error("Erreur lors de l'ajout du commentaire:", error);
+    }
   };
 
   return (
@@ -78,12 +94,36 @@ const Home = () => {
             font-weight: bold;
           }
 
-       
           .simpleSection {
             margin-top: -50px; /* Fait monter le composant */
             margin-bottom: 50px; /* Ajoute de l'espace en bas */
             display: flex;
             justify-content: center;
+          }
+
+          .comment-form {
+            background-color: white;
+            color: black;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          }
+
+          .comment-form textarea {
+            width: 100%;
+            height: 80px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+          }
+
+          .comment-form select, .comment-form button {
+            padding: 10px;
+            margin-right: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
           }
         `}
       </style>
@@ -103,7 +143,6 @@ const Home = () => {
             marginTop: "90px",
             fontFamily: "Amiri, sans-serif",
             fontWeight: "bold",
-           
           }}
         >
           Annonces immobilières en Algérie
@@ -130,8 +169,6 @@ const Home = () => {
       </div>
 
       <div className="simpleSection">
-        {" "}
-      
         <SimpleSection />
       </div>
 
@@ -142,16 +179,43 @@ const Home = () => {
           Darkoum, c'est vous qui en parlez le mieux ...
         </h2>
         <div className="avis-cards">
-  {avis.map((avisItem, index) => (
-    <div key={index} className="avis-card">
-      <h3>{avisItem.contenu}</h3>
-      <div className="stars">{renderStars(avisItem.note)}</div>
-      <div className="user-name">
-        Par {avisItem.utilisateur ? avisItem.utilisateur.nomComplet : 'Utilisateur inconnu'}
-      </div>
-    </div>
-  ))}
-</div>
+          {avis.map((avisItem, index) => (
+            <div key={index} className="avis-card">
+              <h3>{avisItem.contenu}</h3>
+              <div className="stars">{renderStars(avisItem.note)}</div>
+              <div className="user-name">
+                Par {avisItem.utilisateur ? avisItem.utilisateur.nomComplet : "Utilisateur inconnu"}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="comment-form">
+          <h3>Ajouter un commentaire</h3>
+          <form onSubmit={handleSubmit}>
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Écrivez votre commentaire ici"
+              required
+            />
+            <div>
+              <select
+                value={newRating}
+                onChange={(e) => setNewRating(parseInt(e.target.value))}
+                required
+              >
+                <option value="">Choisissez une note</option>
+                <option value="1">1 étoile</option>
+                <option value="2">2 étoiles</option>
+                <option value="3">3 étoiles</option>
+                <option value="4">4 étoiles</option>
+                <option value="5">5 étoiles</option>
+              </select>
+              <button type="submit">Soumettre</button>
+            </div>
+          </form>
+        </div>
       </div>
 
       <div className="footer-container">

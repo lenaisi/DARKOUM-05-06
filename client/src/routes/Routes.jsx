@@ -26,6 +26,9 @@ import SearchResults from "../pages/SearchResults.jsx";
 import CompteErreur from "../pages/erreurPage";
 import MyFavorites from "../pages/MyFavorites.jsx";
 import Avis from "../pages/Avis.jsx";
+import ThreeSixtyViewer from '../components/ThreeSixtyViewer';
+import Visitt from "../pages/Visitt.jsx";
+
 
 const AppRoutes = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -62,6 +65,10 @@ const AppRoutes = () => {
         <Route path="/erreur" element={<CompteErreur />} />
         <Route path="http://localhost:5000/auth/google" />
         <Route path="/logout" element={<Logout />} />
+        {/* <Route exact path="/visitt" component={ThreeSixtyViewer} /> */}
+        {/* <Route exact path="/houses/:id/visitt" component={ThreeSixtyViewer} /> */}
+        <Route path="/houses/:id/visitt" element={<Visitt />} /> 
+
       </Routes>
     </Router>
   );
