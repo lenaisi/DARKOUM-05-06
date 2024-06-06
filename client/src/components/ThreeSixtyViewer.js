@@ -13,16 +13,15 @@ const ThreeSixtyViewer = () => {
   useEffect(() => {
     // Initialiser la scène, la caméra et le rendu
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+
+    // Calculer la taille de la caméra pour qu'elle occupe juste le centre de l'écran
+    const width = window.innerWidth * 0.8;
+    const height = window.innerHeight * 0.8;
+    camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.set(0, 0, 0.1);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
     mountRef.current.appendChild(renderer.domElement);
 
     controls = new OrbitControls(camera, renderer.domElement);
@@ -232,7 +231,7 @@ const ThreeSixtyViewer = () => {
   };
 
   return (
-    <div ref={mountRef} style={{ position: 'relative', width: '100vw', height: '100vh' }}>
+    <div ref={mountRef} style={{ position: 'relative', width: '80vw', height: '80vh' }}>
       <button
         onClick={toggleFullScreen}
         style={{
@@ -527,4 +526,3 @@ export default ThreeSixtyViewer;
 // };
 
 // export default ThreeSixtyViewer;
-

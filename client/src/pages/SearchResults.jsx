@@ -1,11 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaLocationDot } from 'react-icons/fa6';
 import { Link, useLocation } from 'react-router-dom';
 import sorry from '../assets/sorry.png';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 const SearchResults = () => {
   const location = useLocation();
   const { houses } = location.state || { houses: [] };
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fakeLoading = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+
+    return () => {
+      clearTimeout(fakeLoading);
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f9f9f9' }}>
+        <div style={{ fontSize: "24px", marginBottom: "20px" }}>Chargement en cours...</div>
+        <FontAwesomeIcon icon={faSpinner} spin style={{ fontSize: "50px", color: "#F27438" }} />
+      </div>
+    );
+  }
+
   if (!Array.isArray(houses) || houses.length === 0) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', backgroundColor: '#f9f9f9' }}>

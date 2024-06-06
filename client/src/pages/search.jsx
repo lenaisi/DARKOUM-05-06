@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FaLocationDot, FaHeart, FaRegHeart } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import Navbar from '../components/Navbar1';
@@ -16,6 +18,7 @@ const Search = ({ userId }) => {
   useEffect(() => {
     const fetchHouses = async () => {
       try {
+        await new Promise(resolve => setTimeout(resolve, 1000));
         const response = await axios.get(
           "http://localhost:5000/api/v1/auth/houses"
         );
@@ -75,7 +78,13 @@ const Search = ({ userId }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{ textAlign: "center", marginTop: "120px", fontFamily: "Arial, sans-serif" }}>
+        <Navbar />
+        <div style={{ fontSize: "24px", marginBottom: "20px" }}>Chargement en cours...</div>
+        <FontAwesomeIcon icon={faSpinner} spin style={{ fontSize: "50px", color: "#F27438" }} />
+      </div>
+    );
   }
 
   if (error) {
