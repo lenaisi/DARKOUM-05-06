@@ -6,11 +6,20 @@ import Section from "../components/Section";
 import Properties from "../components/properties";
 import { RiStarSLine, RiStarSFill } from "react-icons/ri";
 import SimpleSection from "../components/SimpleSection";
+import { useSelector } from "react-redux";
 
-const Home = () => {
+const Home = ({userId}) => {
   const [avis, setAvis] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [newRating, setNewRating] = useState(0);
+  console.log('user',userId)
+  // console.log('userId',userId._id)
+  const { currentUser } = useSelector((state) => state.user);
+  console.log('currentUser',currentUser)
+  const userID=currentUser.user._id;
+  console.log('userID',userID)
+
+
 
   useEffect(() => {
     const fetchAvis = async () => {
@@ -43,13 +52,16 @@ const Home = () => {
       const response = await axios.post("http://localhost:5000/api/v4/avis/avis", {
         contenu: newComment,
         note: newRating,
-        utilisateur: { nomComplet: "Utilisateur Anonyme" } // Update this as needed
+        utilisateur:userID// Update this as needed
       });
+      console.log('response data',response.data)
       setAvis([...avis, response.data.data.avis]);
+      console.log('avis',avis)
       setNewComment("");
       setNewRating(0);
     } catch (error) {
       console.error("Erreur lors de l'ajout du commentaire:", error);
+
     }
   };
 

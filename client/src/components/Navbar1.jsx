@@ -10,8 +10,8 @@ const Navbar1 = () => {
     const dispatch = useDispatch();
 
     const handleLogout = () => {
-        // dispatch(logout());
-        dispatch(logoutUser());
+        dispatch(logout());
+        // dispatch(logoutUser());
         navigate('/sign-in');
     };
 

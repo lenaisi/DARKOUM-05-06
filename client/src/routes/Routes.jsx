@@ -32,9 +32,9 @@ import Visitt from "../pages/Visitt.jsx";
 
 const AppRoutes = () => {
   const { currentUser } = useSelector((state) => state.user);
-  const userId =currentUser?.userId;
-
-  console.log("currentUser:", currentUser);
+  const userId =currentUser;
+  // console.log("userId", userId);
+  // console.log("currentUser", currentUser);
 
   return (
     <Router>
