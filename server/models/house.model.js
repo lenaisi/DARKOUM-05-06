@@ -28,9 +28,11 @@ const houseSchema = new mongoose.Schema({
         required: true,
     },
      
-    images: {
-        type: String,
-    },
+    images: [{
+       url: {type: String},
+    }],
+      
+    
     createdAt: {
         type: Date,
         default: Date.now,

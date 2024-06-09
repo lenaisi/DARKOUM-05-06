@@ -54,7 +54,7 @@ module.exports.signIn = async (req, res) => {
 
     const token = createToken(user._id);
     res.cookie('jwt', token, { httpOnly: true, maxAge });
-    res.status(200).json({ user });
+    res.status(200).json({ user: user._id });
   } catch (err) {
     console.error("Erreur lors de la soumission du formulaire:", error);
     res.status(500).json({ errors: [{ msg: "Erreur lors de la connexion. Veuillez réessayer plus tard." }] });

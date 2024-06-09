@@ -3,8 +3,7 @@ import axios from "axios";
 import { useParams, Link } from "react-router-dom";
 import { FaLocationDot } from "react-icons/fa6";
 import { IoArrowBackCircle } from "react-icons/io5";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { IoArrowBack, IoArrowForward } from "react-icons/io5";
 import Navbar from '../components/Navbar1';
 import Footer from '../components/footer';
 
@@ -13,6 +12,7 @@ const HouseDetails = () => {
   const [house, setHouse] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
     const fetchHouseDetails = async () => {
@@ -29,14 +29,20 @@ const HouseDetails = () => {
     fetchHouseDetails();
   }, [id]);
 
-  if (loading) {
-    return (
-      <div style={{ textAlign: "center", marginTop: "120px", fontFamily: "Arial, sans-serif" }}>
-        <Navbar />
-        <div style={{ fontSize: "24px", marginBottom: "20px" }}>Chargement en cours...</div>
-        <FontAwesomeIcon icon={faSpinner} spin style={{ fontSize: "50px", color: "#F27438" }} />
-      </div>
+  const handleNextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === house.images.length - 1 ? 0 : prevIndex + 1
     );
+  };
+
+  const handlePrevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? house.images.length - 1 : prevIndex - 1
+    );
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   if (error) {
@@ -46,14 +52,58 @@ const HouseDetails = () => {
   const createdAtDate = new Date(house.createdAt).toLocaleDateString();
 
   return (
-    <div>
-      <Navbar />
-      <div style={{ marginTop: "100px", fontFamily: "Arial, sans-serif", padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
-        <div style={{ marginBottom: "20px" }}>
-          <div style={{ width: "100%", overflow: "hidden", marginBottom: "20px" }}>
-            <img src={house.images} style={{ width: "100%", height: "auto", borderRadius: "10px" }} alt="House" />
-          </div>
-        </div>
+    
+    
+    <div style={{ backgroundColor: "#f0f0f0" }}>
+      <div style={{ marginTop: "150px", fontFamily: "Arial, sans-serif", padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
+        <section style={{ marginBottom: "20px", position: "relative" }}>
+          {house.images && house.images.length > 0 && (
+            <div style={{ position: "relative" }}>
+              <img
+                src={house.images[currentImageIndex].url}
+                style={{
+                  width: "100%",
+                  height: "auto",
+                  display: "block",
+                  borderRadius: "10px"
+                }}
+                alt={`House ${currentImageIndex + 1}`}
+              />
+              <button
+                onClick={handlePrevImage}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "10px",
+                  transform: "translateY(-50%)",
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "50%",
+                  cursor: "pointer"
+                }}
+              >
+                <IoArrowBack size={24} />
+              </button>
+              <button
+                onClick={handleNextImage}
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  right: "10px",
+                  transform: "translateY(-50%)",
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                  color: "#fff",
+                  border: "none",
+                  borderRadius: "50%",
+                  cursor: "pointer"
+                }}
+              >
+                <IoArrowForward size={24} />
+              </button>
+            </div>
+          )}
+        </section>
         <div style={{ marginBottom: "20px" }}>
           <h1 style={{ fontSize: "36px", fontWeight: "bold", color: "#000", marginBottom: "10px" }}>{house.title}</h1>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
@@ -84,7 +134,7 @@ const HouseDetails = () => {
             </Link>
             <Link to="/visit" style={{ textDecoration: "none" }}>
               <button style={{ backgroundColor: "#F27438", color: "#FFF", padding: "10px 20px", border: "none", borderRadius: "10px", cursor: "pointer" }}>
-                Visiter ce bien en personne
+                Visite sur site
               </button>
             </Link>
           </div>
@@ -93,7 +143,7 @@ const HouseDetails = () => {
       <div style={{ textAlign: "center", marginTop: "20px" }}>
         <Link to="/search" style={{ textDecoration: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <IoArrowBackCircle style={{ fontSize: "24px", marginRight: "10px" }} />
-          <span style={{ fontSize: "18px", color: "#000", marginRight: "-800px", fontWeight: "bold" }}>Retour à la recherche</span>
+          <span style={{ fontSize: "18px", color: "#000", fontWeight: "bold" }}>Retour à la recherche</span>
         </Link>
       </div>
       <Footer />

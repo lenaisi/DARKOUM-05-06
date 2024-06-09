@@ -69,9 +69,10 @@ module.exports.addHouse = async (req, res) => {
     typeBien,
     wilaya,
     price,
+    images, 
   } = req.body;
-  const imagepath = req.file ? req.file.path : null 
-   const adminId = req.body.adminId;
+
+  const adminId = req.body.adminId;
 
   try {
     const house = await House.create({
@@ -81,7 +82,7 @@ module.exports.addHouse = async (req, res) => {
       typeBien,
       wilaya,
       price,
-      images: imagepath,
+      images,
       admin: adminId,
     });
     res.status(201).json(house);
@@ -89,6 +90,7 @@ module.exports.addHouse = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
 
 module.exports.getHouses = async (req, res) => {
   try {

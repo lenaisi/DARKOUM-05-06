@@ -7,7 +7,7 @@ const SimpleSection = () => {
     <div className="simple-section">
       <div className="background"></div>
       <div className="content">
-        <p className="main-text">Nous aidons les gens et les maisons à se retrouver !</p>
+        <p className="main-text">Nous aidons les gens et les maisons à se trouver !</p>
         <div className="view-more-container">
           <Link to="/search" className="view-more-button">Parcourir les biens disponibles</Link>
         </div>

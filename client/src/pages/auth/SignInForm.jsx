@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate ,Link} from "react-router-dom";
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import Navbar from '../../components/Navbar';
 
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
+// import Link from '@mui/material/Link';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Paper from '@mui/material/Paper';
@@ -17,17 +18,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import background from '../../assets/login-pana.png';
 import logo from '../../assets/avtr.png';
 import { FcGoogle } from "react-icons/fc";
-import { useSelector, useDispatch } from 'react-redux';
-import { fetchUserData, loginStart, loginSuccess, loginFailure } from '../../redux/userSlice';
 
 import "./style.css"
-
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
-  const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -36,7 +31,6 @@ export default function SignInSide() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      dispatch(loginStart());
       if (!email || !password) {
         setError("Veuillez remplir tous les champs.");
         return;
@@ -49,10 +43,10 @@ export default function SignInSide() {
       );
 
       if (response.status === 200) {
-        dispatch(loginSuccess(response.data));
+        console.log("Connexion réussie:", response.data);
         navigate("/home");
       } else {
-        setError(response.data.errors[0].msg);
+        setError(response.data.errors[0].msg); // Afficher le message d'erreur renvoyé par le backend
       }
     } catch (error) {
       console.error("Erreur lors de la soumission du formulaire:", error);
@@ -66,15 +60,6 @@ export default function SignInSide() {
 
   const handleForgotPassword = () => {
     navigate('/ResetPassword');
-  };
-
-  const handleAddReview = () => {
-    // Vérifier si l'utilisateur est connecté
-    if (!isAuthenticated) {
-      setError("Il faut être connecté pour soumettre un avis.");
-      return;
-    }
-    // Gérer la logique pour soumettre un avis
   };
 
   return (
@@ -172,35 +157,32 @@ export default function SignInSide() {
               >
                 Se connecter
               </Button>
+              <div className="google-sign-in">
+  <button type="button" >
+  <Link to="http://localhost:5000/auth/google"  >Continuer avec Google</Link>    <FcGoogle size={"25px"} className="iconeGoogle" />
+  </button>
 
-              <Button
-                fullWidth
-                variant="contained"
-                onClick={handleAddReview}
-                sx={{
-                  mt: 1,
-                  mb: 2,
-                  bgcolor: '#FF5733',
-                  '&:hover': {
-                    bgcolor: '#E64A19',
-                  },
-                }}
-              >
-                Ajouter un avis
-              </Button>
+</div>
 
-              <Grid container>
+
+
+
+
+
+<Grid container>
                 <Grid item xs>
-                  <Link to="/ResetPassword" variant="body2" sx={{ color: 'black' }} onClick={handleForgotPassword}>
+                <Link to="/ResetPassword" variant="body2" sx={{ color: 'black' }} onClick={handleForgotPassword}>
                     Mot de passe oublié?
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link to="/sign-up" variant="body2" sx={{ color: 'black', fontWeight: 'bold' }}>
+                <Link to="/sign-up" variant="body2" sx={{ color: 'black', fontWeight: 'bold' }}>
                     {"Vous n'avez pas de compte ? Inscrivez-vous"}
                   </Link>
                 </Grid>
               </Grid>
+              
+
             </Box>
           </Box>
         </Grid>

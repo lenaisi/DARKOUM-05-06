@@ -14,15 +14,15 @@ const Search = ({ userId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [favorites, setFavorites] = useState([]);
+  const [hoveredHouse, setHoveredHouse] = useState(null);
 
   useEffect(() => {
     const fetchHouses = async () => {
       try {
         await new Promise(resolve => setTimeout(resolve, 1000));
-        const response = await axios.get(
-          "http://localhost:5000/api/v1/auth/houses"
-        );
+        const response = await axios.get("http://localhost:5000/api/v1/auth/houses");
         setHouses(response.data);
+        console.log("Fetched houses:", response.data); // Log fetched houses
       } catch (err) {
         setError(err);
       } finally {
@@ -36,9 +36,7 @@ const Search = ({ userId }) => {
   useEffect(() => {
     const fetchFavorites = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5000/api/v1/auth/${userId}`
-        );
+        const response = await axios.get(`http://localhost:5000/api/v1/auth/${userId}`);
         setFavorites(response.data.favorites.map((fav) => fav._id));
       } catch (err) {
         console.error("Erreur lors de la récupération des favoris:", err);
@@ -100,7 +98,14 @@ const Search = ({ userId }) => {
   }, {});
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", position: "relative", paddingTop: "120px" }}>
+    <div 
+      style={{
+        backgroundColor: "#f0f0f0",
+        fontFamily: "Arial, sans-serif",
+        position: "relative",
+        paddingTop: "120px",
+      }}
+    >
       <Navbar />
       <ToastContainer />
 
@@ -133,78 +138,116 @@ const Search = ({ userId }) => {
             style={{
               display: "flex",
               justifyContent: "center",
-              alignItems: "center",
               flexWrap: "wrap",
+              gap: "20px",
             }}
           >
-            {groupedHouses[category].map((house) => (
-              <div
-                key={house._id}
-                style={{
-                  marginRight: "20px",
-                  marginBottom: "20px",
-                  width: "200px",
-                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-                  borderRadius: "10px",
-                  overflow: "hidden",
-                }}
-              >
-                <Link
-                  to={`/HouseDetails/${house._id}`}
-                  style={{ textDecoration: "none", color: "#333" }}
-                >
-                  <img
-                    src={`http://localhost:3000/${house.images}`}
-                    style={{ width: "100%", height: "auto" }}
-                    alt={house.title}
-                  />
-                  <div style={{ padding: "15px" }}>
-                    <h3
-                      style={{
-                        fontSize: "18px",
-                        fontWeight: "bold",
-                        marginBottom: "10px",
-                      }}
-                    >
-                      {house.title}
-                    </h3>
-                    <p
-                      style={{
-                        marginBottom: "10px",
-                        display: "inline-flex",
-                        alignItems: "center",
-                      }}
-                    >
-                      <span style={{ marginRight: "5px", color: "#F27438" }}>
-                        <FaLocationDot />
-                      </span>
-                      {house.wilaya}
-                    </p>
-                  </div>
-                </Link>
-                <button
-                  onClick={() => handleFavorite(house._id)}
+            {groupedHouses[category].map((house) => {
+              const imageUrls = house.images ? house.images.map(image => image.url) : [];
+
+              return (
+                <div
+                  key={house._id}
                   style={{
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
+                    width: "400px",
+                    height: "400px",
+                    boxShadow: hoveredHouse === house ? "0 0 20px rgba(0, 0, 0, 0.3)" : "0 0 10px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                    position: "relative",
+                    transition: "box-shadow 0.3s",
                   }}
+                  onMouseEnter={() => setHoveredHouse(house)}
+                  onMouseLeave={() => setHoveredHouse(null)}
                 >
-                  {favorites.includes(house._id) ? (
-                    <FaHeart style={{ color: "#F27438" }} />
-                  ) : (
-                    <FaRegHeart />
-                  )}
-                </button>
-              </div>
-            ))}
+                  <Link
+                    to={`/HouseDetails/${house._id}`}
+                    style={{ textDecoration: "none", color: "#333" }}
+                  >
+                    <div style={{ height: "250px", overflow: "hidden" }}>
+                      {imageUrls.length > 0 && (
+                        <img
+                          src={imageUrls[0]}
+                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          alt="House"
+                        />
+                      )}
+                    </div>
+                    <div style={{ padding: "15px" }}>
+                      <h3
+                        style={{
+                          fontSize: "18px",
+                          fontWeight: "bold",
+                          marginBottom: "10px",
+                        }}
+                      >
+                        {house.title}
+                      </h3>
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "start",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <span style={{ marginRight: "5px", color: "#F27438" }}>
+                            <FaLocationDot />
+                          </span>
+                          <span>{house.wilaya}</span>
+                        </div>
+                        <span style={{ marginTop: "10px", color: "#000" }}>
+                          {house.price} DA
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={() => handleFavorite(house._id)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      position: "absolute",
+                      bottom: "10px",
+                      right: "10px",
+                      backgroundColor: "white", // Ensure the heart is on a white background
+                      borderRadius: "50%", // Optional: Make the background of the heart circular
+                      padding: "5px", // Optional: Add some padding to the heart background
+                    }}
+                  >
+                    {favorites.includes(house._id) ? (
+                      <FaHeart style={{ color: "#F27438" }} />
+                    ) : (
+                      <FaRegHeart />
+                    )}
+                  </button>
+                </div>
+              );
+            })}
           </div>
         </div>
       ))}
 
-      
-<div style={{ textAlign: "center", marginTop: "40px", marginBottom: "40px" }}>
-        <Link to="/myfavorites" style={{ backgroundColor: "#F27438", color: "white", fontWeight: "bold", fontSize: "20px", padding: "10px 20px", borderRadius: "5px", textDecoration: "none" ,marginLeft:"600px",marginTop: " 100px"}}>Accéder à mes favoris</Link>
+      <div
+        style={{ textAlign: "center", marginTop: "40px", marginBottom: "40px" }}
+      >
+        <Link
+          to="/myfavorites"
+          style={{
+            backgroundColor: "#F27438",
+            color: "white",
+            fontWeight: "bold",
+            fontSize: "20px",
+            padding: "10px  20px",
+            borderRadius: "5px",
+            textDecoration: "none",
+            marginLeft: "600px",
+            marginTop: "100px",
+          }}
+        >
+          Accéder à mes favoris
+        </Link>
       </div>
       <Footer />
     </div>

@@ -61,7 +61,7 @@ const AppRoutes = () => {
         <Route path="/Admin" element={<AdminAccueil />} />
         <Route path="/AddHomes" element={<AddHomes />} />
         <Route path="/HouseDetails/:id" element={<HouseDetails />} />
-        <Route path="/search-results" element={<SearchResults />} />
+        <Route path="/search-results" element={<SearchResults userId={userId}  />} />
         <Route path="/erreur" element={<CompteErreur />} />
         <Route path="http://localhost:5000/auth/google" />
         <Route path="/logout" element={<Logout />} />

@@ -6,6 +6,8 @@ import HouseTypeSelector from "../components/HouseTypeSelector";
 import WilayaSelector from "../components/WilayaSelector";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { storage } from "../firebase";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 function AddHomes() {
   const [formData, setFormData] = useState({
@@ -28,21 +30,61 @@ function AddHomes() {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setFormData({
-      ...formData,
-      images: files.map((file) => URL.createObjectURL(file)),
+    setFormData({ ...formData, images: files });
+  };
+  
+
+  const uploadImage = (image) => {
+    return new Promise((resolve, reject) => {
+      const storageRef = ref(storage, `home-pictures/${image.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, image);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+        },
+        (error) => {
+          console.error("Error uploading file:", error);
+          toast.error("Error uploading file");
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        }
+      );
     });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     try {
+      const imageUrls = await Promise.all(
+        formData.images.map((image) => uploadImage(image))
+      );
+  
+     
+      const images = imageUrls.map((url) => ({ url }));
+  
+      const requestData = {
+        ...formData,
+        images, 
+      };
+  
+      console.log("Request Data:", requestData);
+  
       const response = await axios.post(
         "http://localhost:5000/api/v1/admin/add",
-        formData
+        requestData
       );
+  
       console.log("House added successfully:", response.data);
-      toast.success("Bien ajouté avec succès!"); // Show success notification
+      toast.success("Bien ajouté avec succès!");
+  
       setFormData({
         title: "",
         description: "",
@@ -54,10 +96,23 @@ function AddHomes() {
       });
     } catch (error) {
       console.error("Error adding house:", error);
+  
+      if (error.response) {
+        console.error("Server Response Data:", error.response.data);
+        console.error("Server Response Status:", error.response.status);
+        console.error("Server Response Headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("Request Data:", error.request);
+      } else {
+        console.error("Error Message:", error.message);
+      }
+  
       toast.error("Erreur lors de l'ajout du bien");
     }
   };
-
+  
+  
+  
   const styles = {
     addHomesContainer: {
       display: "flex",
@@ -112,7 +167,7 @@ function AddHomes() {
       fontSize: "18px",
       alignSelf: "flex-end",
       marginTop: "20px",
-      marginLeft: "700px", 
+      marginLeft: "700px",
     },
     buttonHover: {
       backgroundColor: "#d65f1e",
@@ -199,6 +254,8 @@ function AddHomes() {
               required
             />
           </div>
+         
+
           <div style={{ marginBottom: "20px" }}>
             <label style={styles.label} htmlFor="images">
               Images
