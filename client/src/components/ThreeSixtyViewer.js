@@ -220,12 +220,16 @@ const ThreeSixtyViewer = () => {
 
   // Fonction pour zoomer
   const handleZoomIn = () => {
+    if (camera.fov < 30) return; // Limiter le zoom in à un certain seuil (30 degrés)
+
     camera.fov -= 10;
     camera.updateProjectionMatrix();
   };
 
   // Fonction pour dézoomer
   const handleZoomOut = () => {
+    if (camera.fov > 100) return; // Limiter le zoom out à un certain seuil (100 degrés)
+
     camera.fov += 10;
     camera.updateProjectionMatrix();
   };
