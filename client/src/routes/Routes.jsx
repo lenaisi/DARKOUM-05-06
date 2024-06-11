@@ -32,44 +32,49 @@ import Visitt from "../pages/Visitt.jsx";
 
 const AppRoutes = () => {
   const { currentUser } = useSelector((state) => state.user);
-  const userId =currentUser;
+  // const userId =currentUser._id;
   // console.log("userId", userId);
   // console.log("currentUser", currentUser);
 
   return (
     <Router>
+        {currentUser ? (
       <Routes>
-        <Route path="/index.html" element={<Navigate to="/" />} />
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/sign-in" element={<SignInForm />} />
-        <Route path="/sign-up" element={<SignUpForm />} />
-        <Route path="/ResetPassword" element={<PasswordResetForm />} />
-        <Route path="/Verification" element={<CodeVerificationForm />} />
-        <Route path="/NewPassword/:id/:token" element={<NewPassword />} />
-        <Route path="/Adminlogin" element={<AdminLogin />} />
-        <Route path="/home" element={<Home userId={userId} />} />
-        <Route path="/NosServices" element={<NosServices />} />
-        <Route path="/AboutUs" element={<AboutUs />} />
-        <Route path="/Search" element={<Search userId={userId} />} />
-        <Route path="/myFavorites" element={<MyFavorites userId={userId} />} />
-        <Route path="/visit" element={<VisiteForm />} />
-        <Route path="/confirmation" element={<Confirmation />} />
-        <Route path="/users" element={<Users />} />
-        <Route path="/DemandeVisit" element={<DemandeVisit />} />
-        <Route path="/OurHomes" element={<OurHomes />} />
-        <Route path="/Avis" element={<Avis userId={userId} />} />
-        <Route path="/Admin" element={<AdminAccueil />} />
-        <Route path="/AddHomes" element={<AddHomes />} />
-        <Route path="/HouseDetails/:id" element={<HouseDetails />} />
-        <Route path="/search-results" element={<SearchResults userId={userId}  />} />
-        <Route path="/erreur" element={<CompteErreur />} />
-        <Route path="http://localhost:5000/auth/google" />
-        <Route path="/logout" element={<Logout />} />
-        {/* <Route exact path="/visitt" component={ThreeSixtyViewer} /> */}
-        {/* <Route exact path="/houses/:id/visitt" component={ThreeSixtyViewer} /> */}
-        <Route path="/houses/:id/visitt" element={<Visitt />} /> 
-
+          <Route path="/home" element={<Home userId={currentUser._id} />} />
+          <Route path="/NosServices" element={<NosServices />} />
+          <Route path="/AboutUs" element={<AboutUs />} />
+          <Route path="/Search" element={<Search userId={currentUser._id} />} />
+          <Route path="/myFavorites" element={<MyFavorites userId={currentUser._id} />} />
+          <Route path="/visit" element={<VisiteForm />} />
+          <Route path="/confirmation" element={<Confirmation />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/DemandeVisit" element={<DemandeVisit />} />
+          <Route path="/OurHomes" element={<OurHomes />} />
+          <Route path="/Avis" element={<Avis userId={currentUser._id} />} />
+          <Route path="/Admin" element={<AdminAccueil />} />
+          <Route path="/AddHomes" element={<AddHomes />} />
+          <Route path="/HouseDetails/:id" element={<HouseDetails />} />
+          <Route path="/search-results" element={<SearchResults userId={currentUser._id}  />} />
+          <Route path="/erreur" element={<CompteErreur />} />
+          <Route path="http://localhost:5000/auth/google" />
+          <Route path="/logout" element={<Logout />} />
+          {/* <Route exact path="/visitt" component={ThreeSixtyViewer} /> */}
+          {/* <Route exact path="/houses/:id/visitt" component={ThreeSixtyViewer} /> */}
+          <Route path="/houses/:id/visitt" element={<Visitt />} /> 
+          </Routes>
+        ) : (
+          <Routes>
+          <Route path="/index.html" element={<Navigate to="/" />} />
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/sign-in" element={<SignInForm />} />
+          <Route path="/sign-up" element={<SignUpForm />} />
+          <Route path="/ResetPassword" element={<PasswordResetForm />} />
+          <Route path="/Verification" element={<CodeVerificationForm />} />
+          <Route path="/NewPassword/:id/:token" element={<NewPassword />} />
+          <Route path="/Adminlogin" element={<AdminLogin />} />
       </Routes>
+        ) }
+
     </Router>
   );
 };

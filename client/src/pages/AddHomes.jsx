@@ -17,6 +17,7 @@ function AddHomes() {
     typeBien: "",
     wilaya: "",
     price: "",
+    locationMapLink: "",
     images: [],
   });
 
@@ -92,6 +93,7 @@ function AddHomes() {
         typeBien: "",
         wilaya: "",
         price: "",
+        locationMapLink: "",
         images: [],
       });
     } catch (error) {
@@ -254,6 +256,19 @@ function AddHomes() {
               required
             />
           </div>
+          <div style={{ marginBottom: "20px" }}>
+  <label style={styles.label} htmlFor="locationMapLink">
+    Lien vers la localisation sur la carte
+  </label>
+  <input
+    style={styles.input}
+    type="text"
+    name="locationMapLink"
+    value={formData.locationMapLink}
+    onChange={handleChange}
+    required
+  />
+</div>
          
 
           <div style={{ marginBottom: "20px" }}>

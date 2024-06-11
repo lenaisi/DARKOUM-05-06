@@ -69,6 +69,7 @@ module.exports.addHouse = async (req, res) => {
     typeBien,
     wilaya,
     price,
+    locationMapLink,
     images, 
   } = req.body;
 
@@ -82,6 +83,7 @@ module.exports.addHouse = async (req, res) => {
       typeBien,
       wilaya,
       price,
+      locationMapLink,
       images,
       admin: adminId,
     });

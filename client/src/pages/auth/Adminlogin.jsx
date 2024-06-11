@@ -4,6 +4,8 @@ import axios from 'axios';
 import adminImage from '../../assets/Admin.png';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchAdminData } from '../../redux/adminSlice'; 
+import { fetchUserData, loginStart, loginSuccess, loginFailure } from '../../redux/adminSlice';
+
 
 
 const AdminLogin = () => {
@@ -11,6 +13,9 @@ const AdminLogin = () => {
         email: '',
         password: ''
     });
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
 
     const dispatch = useDispatch(); 
     const navigate = useNavigate(); 
@@ -23,8 +28,11 @@ const AdminLogin = () => {
         e.preventDefault();
         try {
             const response = await axios.post('http://localhost:5000/api/v1/admin/signIn', formData);
-            console.log(response.data);
-            await dispatch(fetchAdminData()); 
+            dispatch(loginSuccess(response.data));
+            console.log('res data : ', response.data);
+            // console.log(response.data);
+            await dispatch(loginSuccess(response.data)); 
+            // await dispatch(fetchAdminData()); 
             navigate('/Admin'); 
         } catch (error) {
             console.error(error.response.data.errors);

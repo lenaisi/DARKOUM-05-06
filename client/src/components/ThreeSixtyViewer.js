@@ -9,6 +9,7 @@ const ThreeSixtyViewer = () => {
   const mountRef = useRef(null);
   let scene, camera, renderer, controls;
   let poiObjects = []; // pour stocker les points d'intérêt
+  
 
   useEffect(() => {
     // Initialiser la scène, la caméra et le rendu
@@ -31,8 +32,8 @@ const ThreeSixtyViewer = () => {
     // Charger la texture 360
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(
-      '/pipi.jpg', // Fournir le chemin correct vers votre image 360
-      (texture) => {
+      '/somm.jpg', // Fournir le chemin correct vers votre image 360
+      (texture)=> {
         const geometry = new THREE.SphereGeometry(500, 60, 40);
         geometry.scale(-1, 1, 1);
 
@@ -65,6 +66,7 @@ const ThreeSixtyViewer = () => {
       poiObjects.push(poi);
       scene.add(poi);
     });
+    
 
     const onWindowResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
@@ -217,6 +219,7 @@ const ThreeSixtyViewer = () => {
       document.exitFullscreen();
     }
   };
+  
 
   // Fonction pour zoomer
   const handleZoomIn = () => {

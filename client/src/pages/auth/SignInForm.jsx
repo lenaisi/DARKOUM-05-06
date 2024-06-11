@@ -28,9 +28,6 @@ export default function SignInSide() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -50,6 +47,7 @@ export default function SignInSide() {
 
       if (response.status === 200) {
         dispatch(loginSuccess(response.data));
+        console.log('res data : ', response.data);
         navigate("/home");
       } else {
         setError(response.data.errors[0].msg);
@@ -70,10 +68,10 @@ export default function SignInSide() {
 
   const handleAddReview = () => {
     // Vérifier si l'utilisateur est connecté
-    if (!isAuthenticated) {
-      setError("Il faut être connecté pour soumettre un avis.");
-      return;
-    }
+    // if (!isAuthenticated) {
+    //   setError("Il faut être connecté pour soumettre un avis.");
+    //   return;
+    // }
     // Gérer la logique pour soumettre un avis
   };
 
