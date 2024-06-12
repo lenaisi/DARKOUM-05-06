@@ -213,7 +213,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  currentUser: null,
+  currentAdmin: null,
   loading: false,
   error: false,
 };
@@ -227,7 +227,7 @@ export const adminSlice = createSlice({
     },
     loginSuccess: (state, action) => {
       state.loading = false;
-      state.currentUser = action.payload;
+      state.currentAdmin = action.payload;
     },
     loginFailure: (state) => {
       state.loading = false;
@@ -235,12 +235,12 @@ export const adminSlice = createSlice({
     },
    
     logout: (state) => {
-      state.currentUser = null;
+      state.currentAdmin = null;
       state.loading = false;
       state.error = false;
     },
     updateUser: (state, action) => {
-      state.currentUser = { ...state.currentUser, ...action.payload };
+      state.currentAdmin = { ...state.currentAdmin, ...action.payload };
     },
   },
 });

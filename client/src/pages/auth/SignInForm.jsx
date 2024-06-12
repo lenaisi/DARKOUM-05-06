@@ -25,6 +25,9 @@ import "./style.css"
 const defaultTheme = createTheme();
 
 export default function SignInSide() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
   const dispatch = useDispatch();
   const isAuthenticated = useSelector((state) => state.user.isAuthenticated);
 

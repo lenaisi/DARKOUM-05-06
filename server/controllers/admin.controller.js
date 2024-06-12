@@ -36,24 +36,52 @@ module.exports.signUp = async (req, res) => {
 
 module.exports.signIn = async (req, res) => {
   const { email, password } = req.body;
+  console.log(req.body);
   try {
-    const admin = await AdminModel.login(email, password);
-    // Récupérer le rôle de l'administrateur
+    const admin = await AdminModel.findOne({ email });
+
+    if (!admin) {
+      return res.status(400).json({ errors: [{ msg: "Cet utilisateur n'existe pas." }] });
+    }
+    
     const role = admin.role;
 
-    // Créer un jeton d'authentification
+    const isMatch = await bcrypt.compare(password, admin.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ errors: [{ msg: "Mot de passe incorrect." }] });
+    }
+
     const token = createToken(admin._id);
-
-    // Envoyer le jeton dans un cookie
-    res.cookie("jwt", token, { httpOnly: true, maxAge });
-
-    // Répondre avec l'ID de l'administrateur et son rôle
-    res.status(200).json({ admin: admin._id, role: role });
+    res.cookie('jwt', token, { httpOnly: true, maxAge });
+    res.status(200).json({ admin });
   } catch (err) {
-    const errors = signInErrors(err);
-    res.status(200).json({ errors });
+    console.error("Erreur lors de la soumission du formulaire:", err);
+    res.status(500).json({ err: [{ msg: "Erreur lors de la connexion. Veuillez réessayer plus tard." }] });
   }
 };
+
+// module.exports.signIn = async (req, res) => {
+//   const { email, password } = req.body;
+//   console.log('req body',req.body);
+//   try {
+//     const admin = await AdminModel.login(email, password);
+//     // Récupérer le rôle de l'administrateur
+//     const role = admin.role;
+
+//     // Créer un jeton d'authentification
+//     const token = createToken(admin._id);
+
+//     // Envoyer le jeton dans un cookie
+//     res.cookie("jwt", token, { httpOnly: true, maxAge });
+
+//     // Répondre avec l'ID de l'administrateur et son rôle
+//     res.status(200).json({ admin: admin._id, role: role });
+//   } catch (err) {
+//     const errors = signInErrors(err);
+//     res.status(200).json({ errors });
+//   }
+// };
 
 module.exports.logOut = (req, res) => {
   res.cookie("jwt", "", { maxAge: 1 });

@@ -18,7 +18,7 @@ router.post("/NewPassword/:id/:token", authController.NewPassword);
 
 
 
-router.post('/favorites/add', authController.addToFavorites);
+router.post('/favorites/add/:id', authController.addToFavorites);
 router.post('/favorites/remove', authController.removeFromFavorites);
 router.get('/:userId', authController.getFavorites);
 

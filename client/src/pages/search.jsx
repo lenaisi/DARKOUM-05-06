@@ -61,13 +61,14 @@ const Search = ({ userId }) => {
         setFavorites(favorites.filter((fav) => fav !== houseId));
         toast.error("Ce bien a été supprimé de vos favoris !");
       } else {
-        await axios.post(
-          "http://localhost:5000/api/v1/auth/favorites/add",
-          { userId, houseId },
+       const response= await axios.post(
+        `http://localhost:5000/api/v1/auth/favorites/add/${userId}`,
+          {  houseId },
           { withCredentials: true }
         );
         setFavorites([...favorites, houseId]);
         toast.success("Ce bien a été ajouté à votre liste de favoris !");
+        console.log ('response.data',response.data,);
       }
     } catch (err) {
       console.error("Erreur lors de la mise à jour des favoris:", err);

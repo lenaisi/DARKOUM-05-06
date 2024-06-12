@@ -179,7 +179,10 @@ module.exports.getHouses = async (req, res) => {
 
 
 module.exports.addToFavorites = async (req, res) => {
-  const { userId, houseId } = req.body;
+  const userId = req.params.id;
+  const {  houseId } = req.body;
+  console.log('req.body',req.body);
+  console.log('req params',req.params);
 
   try {
     const user = await UserModel.findById(userId);

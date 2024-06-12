@@ -1,8 +1,13 @@
 import React from 'react';
 import Sidebar from '../components/SideBar'; 
 import panel from '../assets/Control Panel-cuate.png';
+import { useSelector } from 'react-redux';
 
-function AdminAccueil() {
+function AdminAccueil({admin}) {
+    const { currentAdmin } = useSelector((state) => state.admin);
+
+    console.log('currentAdmin :', currentAdmin);
+    console.log('Admin :', admin);
     const styles = {
         adminAccueilContainer: {
             display: 'flex',
