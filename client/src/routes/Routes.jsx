@@ -70,6 +70,7 @@ console.log(currentAdmin);
             <Route path="/Verification" element={<CodeVerificationForm />} />
             <Route path="/NewPassword/:id/:token" element={<NewPassword />} />
             <Route path="/Adminlogin" element={<AdminLogin />} />
+            <Route path="http://localhost:5000/auth/google" />
           </>
         )}
       </Routes>
