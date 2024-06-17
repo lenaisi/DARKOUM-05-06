@@ -585,6 +585,76 @@ const ThreeSixtyViewer = () => {
 
     // Associez onClickPOI2 au clic sur le deuxième POI
     poiSprite2.userData = { onClick: onClickPOI2 };
+// Ajoutez ces lignes après la définition du deuxième POI
+
+// Troisième POI
+const poiPosition3 = new THREE.Vector3(-50,40, -100); // Position du troisième POI
+const poiTexture3 = new THREE.TextureLoader().load('/fleches.png'); // Chemin de votre icône
+const poiMaterial3 = new THREE.SpriteMaterial({ map: poiTexture3, transparent: true, opacity: 0.8 });
+const poiSprite3 = new THREE.Sprite(poiMaterial3);
+poiSprite3.position.copy(poiPosition3);
+poiSprite3.scale.set(20, 20, 1); // Ajustez la taille selon vos besoins
+scene.add(poiSprite3);
+
+// Animation du troisième POI
+const animatePOI3 = () => {
+  gsap.to(poiSprite3.scale, {
+    x: 24,
+    y: 24,
+    duration: 0.5,
+    yoyo: true,
+    repeat: -1,
+    ease: "power1.inOut"
+  });
+};
+
+animatePOI3();
+
+// Action sur clic du troisième POI
+const onClickPOI3 = () => {
+  const currentTexture = sphere.material.map && sphere.material.map.image && sphere.material.map.image.src;
+
+  if (currentTexture && currentTexture.endsWith('mv.jpg')) {
+    // Si la sphère affiche la troisième image, retournez à la première image
+    textureLoader.load(
+      '/66.jpg',
+      (texture) => {
+        // Supprimez la sphère actuelle
+        scene.remove(sphere);
+
+        // Ajoutez la première image 360
+        const newSphere = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ map: texture }));
+        scene.add(newSphere);
+        sphere = newSphere; // Mettez à jour la référence vers la nouvelle sphère
+      },
+      undefined,
+      (error) => {
+        console.error('Erreur lors du chargement de la texture :', error);
+      }
+    );
+  } else {
+    // Si la sphère affiche la première image, chargez la troisième image (cas initial)
+    textureLoader.load(
+      '/mv.jpg',
+      (texture) => {
+        // Supprimez la sphère actuelle
+        scene.remove(sphere);
+
+        // Ajoutez la troisième image 360
+        const newSphere = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ map: texture }));
+        scene.add(newSphere);
+        sphere = newSphere; // Mettez à jour la référence vers la nouvelle sphère
+      },
+      undefined,
+      (error) => {
+        console.error('Erreur lors du chargement de la texture :', error);
+      }
+    );
+  }
+};
+
+// Associez onClickPOI3 au clic sur le troisième POI
+poiSprite3.userData = { onClick: onClickPOI3 };
 
     // Gestion des événements
     const raycaster = new THREE.Raycaster();
