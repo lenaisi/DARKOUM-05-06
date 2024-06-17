@@ -442,16 +442,16 @@ const ThreeSixtyViewer = () => {
       }
     );
 
-    // Example POI
-    const poiPosition = new THREE.Vector3(100, 0, -15); // POI position
-    const poiTexture = new THREE.TextureLoader().load('/fleches.png'); // Replace with your icon path
+    // Premier POI
+    const poiPosition = new THREE.Vector3(100, 0, -15); // Position du premier POI
+    const poiTexture = new THREE.TextureLoader().load('/fleches.png'); // Chemin de votre icône
     const poiMaterial = new THREE.SpriteMaterial({ map: poiTexture, transparent: true, opacity: 0.8 });
     const poiSprite = new THREE.Sprite(poiMaterial);
     poiSprite.position.copy(poiPosition);
-    poiSprite.scale.set(20, 20, 1); // Adjust the size
+    poiSprite.scale.set(20, 20, 1); // Ajustez la taille selon vos besoins
     scene.add(poiSprite);
 
-    // Bouncing effect using GSAP
+    // Animation du premier POI
     const animatePOI = () => {
       gsap.to(poiSprite.scale, {
         x: 24,
@@ -465,23 +465,23 @@ const ThreeSixtyViewer = () => {
 
     animatePOI();
 
-    // Action on POI click
+    // Action sur clic du premier POI
     const onClickPOI = () => {
       if (sphere && geometry) {
         const currentTexture = sphere.material.map && sphere.material.map.image && sphere.material.map.image.src;
 
         if (currentTexture && currentTexture.endsWith('jrv.jpg')) {
-          // If the sphere displays the second image, return to the first image
+          // Si la sphère affiche la deuxième image, retournez à la première image
           textureLoader.load(
             '/66.jpg',
             (texture) => {
-              // Clear the current scene
+              // Supprimez la sphère actuelle
               scene.remove(sphere);
 
-              // Add the first 360 image
+              // Ajoutez la première image 360
               const newSphere = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ map: texture }));
               scene.add(newSphere);
-              sphere = newSphere; // Update the reference to the new sphere
+              sphere = newSphere; // Mettez à jour la référence vers la nouvelle sphère
             },
             undefined,
             (error) => {
@@ -489,17 +489,17 @@ const ThreeSixtyViewer = () => {
             }
           );
         } else {
-          // If the sphere displays the first image, load the second image (initial case)
+          // Si la sphère affiche la première image, chargez la deuxième image (cas initial)
           textureLoader.load(
             '/jrv.jpg',
             (texture) => {
-              // Clear the current scene
+              // Supprimez la sphère actuelle
               scene.remove(sphere);
 
-              // Add the second 360 image
+              // Ajoutez la deuxième image 360
               const newSphere = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ map: texture }));
               scene.add(newSphere);
-              sphere = newSphere; // Update the reference to the new sphere
+              sphere = newSphere; // Mettez à jour la référence vers la nouvelle sphère
             },
             undefined,
             (error) => {
@@ -510,9 +510,83 @@ const ThreeSixtyViewer = () => {
       }
     };
 
-    // Listen for clicks on the POI
+    // Associez onClickPOI au clic sur le premier POI
     poiSprite.userData = { onClick: onClickPOI };
 
+    // Deuxième POI
+    const poiPosition2 = new THREE.Vector3(100, 0, 100); // Position du deuxième POI
+    const poiTexture2 = new THREE.TextureLoader().load('/fleches.png'); // Chemin de votre icône
+    const poiMaterial2 = new THREE.SpriteMaterial({ map: poiTexture2, transparent: true, opacity: 0.8 });
+    const poiSprite2 = new THREE.Sprite(poiMaterial2);
+    poiSprite2.position.copy(poiPosition2);
+    poiSprite2.scale.set(20, 20, 1); // Ajustez la taille selon vos besoins
+    scene.add(poiSprite2);
+
+    // Animation du deuxième POI
+    const animatePOI2 = () => {
+      gsap.to(poiSprite2.scale, {
+        x: 24,
+        y: 24,
+        duration: 0.5,
+        yoyo: true,
+        repeat: -1,
+        ease: "power1.inOut"
+      });
+    };
+
+    animatePOI2();
+
+    // Action sur clic du deuxième POI
+    const onClickPOI2 = () => {
+      const currentTexture = sphere.material.map && sphere.material.map.image && sphere.material.map.image.src;
+    
+      if (currentTexture && currentTexture.endsWith('mvv.jpg')) {
+        // Si la sphère affiche la deuxième image, retournez à la première image
+        textureLoader.load(
+          '/66.jpg',
+          (texture) => {
+            // Supprimez la sphère actuelle
+            scene.remove(sphere);
+    
+            // Ajoutez la première image 360
+            const newSphere = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ map: texture }));
+            scene.add(newSphere);
+            sphere = newSphere; // Mettez à jour la référence vers la nouvelle sphère
+          },
+          undefined,
+          (error) => {
+            console.error('Erreur lors du chargement de la texture :', error);
+          }
+        );
+      } else {
+        // Si la sphère affiche la première image, chargez la deuxième image (cas initial)
+        textureLoader.load(
+          '/mvv.jpg',
+          (texture) => {
+            // Supprimez la sphère actuelle
+            scene.remove(sphere);
+    
+            // Ajoutez la deuxième image 360
+            const newSphere = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ map: texture }));
+            scene.add(newSphere);
+            sphere = newSphere; // Mettez à jour la référence vers la nouvelle sphère
+          },
+          undefined,
+          (error) => {
+            console.error('Erreur lors du chargement de la texture :', error);
+          }
+        );
+      }
+    };
+    
+    // Associez onClickPOI2 au clic sur le deuxième POI
+    poiSprite2.userData = { onClick: onClickPOI2 };
+    
+
+    // Associez onClickPOI2 au clic sur le deuxième POI
+    poiSprite2.userData = { onClick: onClickPOI2 };
+
+    // Gestion des événements
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
